@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DITL 專案範本</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>DITL 專案範本</h1>
+    <p class="hint">這是 Vercel + Supabase 的起點。確認下面的範例能用之後，就可以改成你自己的專案。</p>
+
+    <section class="card">
+      <h2>1. 連線檢查</h2>
+      <p id="health">檢查中…</p>
+    </section>
+
+    <section class="card">
+      <h2>2. 資料範例（items 資料表）</h2>
+      <form id="add-form">
+        <input id="title" maxlength="100" placeholder="輸入一筆標題" required>
+        <button type="submit">新增</button>
+      </form>
+      <p id="message" class="hint" aria-live="polite"></p>
+      <ul id="items"></ul>
+    </section>
+
+    <section class="card">
+      <h2>3. 登入範例（Supabase Auth）</h2>
+      <p><a href="/login">前往登入頁</a>。專案不需要登入功能時，可以刪掉 <code>login.html</code>、<code>login.js</code> 和 <code>api/me.mjs</code>。</p>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

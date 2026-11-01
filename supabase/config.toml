@@ -1,0 +1,3 @@
+# Supabase CLI 設定。project_id 只是本機識別用的名字，改成你的專案名稱即可。
+# 連到雲端專案：supabase link --project-ref <專案代碼>
+project_id = "lab-project-template"

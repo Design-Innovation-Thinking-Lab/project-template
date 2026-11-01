@@ -1,0 +1,9 @@
+node_modules
+.vercel
+.env*
+!.env.example
+supabase/.temp
+supabase/.branches
+*.dump
+*.sql.gz
+data-export*.sql

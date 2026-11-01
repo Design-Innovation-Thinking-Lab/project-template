@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登入 · DITL 專案範本</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <p><a href="/">◀ 回首頁</a></p>
+    <h1>登入範例</h1>
+    <section class="card" id="signed-out">
+      <p class="hint">輸入 Email，Supabase 會寄一封登入連結給你。</p>
+      <form id="login-form">
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <button type="submit">寄登入連結</button>
+      </form>
+    </section>
+    <section class="card" id="signed-in" hidden>
+      <p>已登入：<strong id="who"></strong></p>
+      <p class="hint" id="server-check"></p>
+      <button id="logout" type="button">登出</button>
+    </section>
+    <p id="message" class="hint" aria-live="polite"></p>
+  </main>
+  <script type="module" src="login.js"></script>
+</body>
+</html>
