@@ -18,7 +18,8 @@
 
     <section class="card">
       <h2>2. 資料範例（items 資料表）</h2>
-      <form id="add-form">
+      <p id="signed-out-note" class="hint" hidden>這個範例要先<a href="/login">登入</a>，每個人只看得到自己新增的資料。</p>
+      <form id="add-form" hidden>
         <input id="title" maxlength="100" placeholder="輸入一筆標題" required>
         <button type="submit">新增</button>
       </form>
@@ -28,7 +29,7 @@
 
     <section class="card">
       <h2>3. 登入範例（Supabase Auth）</h2>
-      <p><a href="/login">前往登入頁</a>。專案不需要登入功能時，可以刪掉 <code>login.html</code>、<code>login.js</code> 和 <code>api/me.mjs</code>。</p>
+      <p><a href="/login">前往登入頁</a>。資料範例用登入來決定誰能讀寫；改成不需要登入的專案時，要先想清楚誰可以讀寫哪些資料，再刪掉登入相關檔案。</p>
     </section>
   </main>
   <script type="module" src="app.js"></script>

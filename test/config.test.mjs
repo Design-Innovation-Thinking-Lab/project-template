@@ -12,10 +12,28 @@ test('reads the names Supabase uses when created on supabase.com', () => {
 test('reads the names the Vercel Marketplace integration sets', () => {
   const env = {
     NEXT_PUBLIC_SUPABASE_URL: 'https://y.supabase.co',
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_x',
+    SUPABASE_SECRET_KEY: 'sb_secret_x',
+  };
+  assert.deepEqual(readConfig(env), { supabaseUrl: 'https://y.supabase.co', publishableKey: 'sb_publishable_x', secretKey: 'sb_secret_x' });
+});
+
+test('reads the legacy anon and service_role names', () => {
+  const env = {
+    NEXT_PUBLIC_SUPABASE_URL: 'https://y.supabase.co',
     NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anon',
     SUPABASE_SERVICE_ROLE_KEY: 'service',
   };
   assert.deepEqual(readConfig(env), { supabaseUrl: 'https://y.supabase.co', publishableKey: 'anon', secretKey: 'service' });
+});
+
+test('never serves a secret key as the public key', () => {
+  const jwt = role => ['e30', Buffer.from(JSON.stringify({ role })).toString('base64url'), 'sig'].join('.');
+  const base = { SUPABASE_URL: 'https://x.supabase.co', SUPABASE_SECRET_KEY: 'sb_secret_x' };
+  assert.equal(readConfig({ ...base, SUPABASE_PUBLISHABLE_KEY: 'sb_secret_oops' }).publishableKey, null);
+  assert.equal(readConfig({ ...base, SUPABASE_ANON_KEY: jwt('service_role') }).publishableKey, null);
+  assert.equal(readConfig({ ...base, SUPABASE_ANON_KEY: jwt('anon') }).publishableKey, jwt('anon'));
+  assert.deepEqual(missingSettings({ ...base, SUPABASE_PUBLISHABLE_KEY: 'sb_secret_oops' }), ['SUPABASE_PUBLISHABLE_KEY']);
 });
 
 test('prefers the first name and ignores blank values', () => {

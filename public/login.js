@@ -3,15 +3,19 @@ import { supabase, authHeaders } from './auth.js';
 
 const $ = id => document.getElementById(id);
 
-async function render() {
-  const client = await supabase();
-  const { data } = await client.auth.getSession();
-  const user = data.session?.user;
+// Updates the page for a session. Takes the session as given (no Supabase calls),
+// so it is safe to run inside onAuthStateChange.
+function show(session) {
+  const user = session?.user;
   $('signed-out').hidden = Boolean(user);
   $('signed-in').hidden = !user;
-  if (!user) return;
-  $('who').textContent = user.email;
-  // Proves the server can verify the browser's session token.
+  $('who').textContent = user?.email ?? '';
+  $('server-check').textContent = '';
+  if (user) setTimeout(checkServer);
+}
+
+// Proves the server can verify the browser's session token.
+async function checkServer() {
   const res = await fetch('/api/me', { headers: await authHeaders() });
   $('server-check').textContent = res.ok ? '✅ 伺服器確認了你的登入身分' : '❌ 伺服器無法確認登入身分';
 }
@@ -29,13 +33,13 @@ $('login-form').addEventListener('submit', async event => {
 $('logout').addEventListener('click', async () => {
   await (await supabase()).auth.signOut();
   $('message').textContent = '已登出';
-  render();
 });
 
 supabase()
   .then(client => {
-    client.auth.onAuthStateChange(() => render());
-    return render();
+    // Fires once right away with the current session, then on every sign-in/out.
+    // Keep this callback synchronous: awaiting Supabase calls inside it can hang.
+    client.auth.onAuthStateChange((_event, session) => show(session));
   })
   .catch(() => {
     $('message').textContent = 'Supabase 尚未設定，請先完成 README 的設定步驟';

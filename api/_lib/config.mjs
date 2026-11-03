@@ -24,8 +24,22 @@ function pick(names, env) {
   return null;
 }
 
+// True for a secret key: the new "sb_secret_…" form, or a legacy JWT whose role is service_role.
+export function looksSecret(key) {
+  if (key.startsWith('sb_secret_')) return true;
+  try {
+    const payload = JSON.parse(Buffer.from(key.split('.')[1], 'base64url').toString());
+    return payload?.role === 'service_role';
+  } catch {
+    return false;
+  }
+}
+
 export function readConfig(env = process.env) {
-  return Object.fromEntries(Object.entries(NAMES).map(([key, names]) => [key, pick(names, env)]));
+  const config = Object.fromEntries(Object.entries(NAMES).map(([key, names]) => [key, pick(names, env)]));
+  // A secret key pasted into a public variable would be sent to every browser; refuse to use it.
+  if (config.publishableKey && looksSecret(config.publishableKey)) config.publishableKey = null;
+  return config;
 }
 
 // Lists the settings that are not set, by their first (preferred) name.

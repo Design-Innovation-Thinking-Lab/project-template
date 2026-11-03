@@ -15,8 +15,12 @@ async function checkHealth() {
   }
 }
 
+// The items API only answers signed-in users, and only with their own rows.
 async function loadItems() {
-  const res = await fetch('/api/items');
+  const res = await fetch('/api/items', { headers: await authHeaders() });
+  const signedIn = res.status !== 401;
+  $('add-form').hidden = !signedIn;
+  $('signed-out-note').hidden = signedIn;
   if (!res.ok) return;
   const { items } = await res.json();
   $('items').replaceChildren(...items.map(item => {

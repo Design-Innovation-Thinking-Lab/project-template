@@ -1,7 +1,7 @@
 // Browser-side Supabase Auth, loaded from a CDN so no build step is needed.
 // Uses only the public URL and publishable key served by /api/config.
 // The library is loaded on first use, so pages still work if the CDN is unreachable.
-const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm';
 
 let clientPromise;
 
