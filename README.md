@@ -27,31 +27,31 @@
 1. **建 repo**：在 GitHub 這個範本頁按 **Use this template → Create a new repository**。
    - Owner 選 `Design-Innovation-Thinking-Lab`。
    - 名稱用 `年份-你的名字-專案名`。
-   - 設成 **Public**（Vercel 免費帳號不能部署組織裡的私有 repo）。
+   - 預設設成 **Public**（研究室的 Vercel 團隊裡，私人 repo 每位 push 的學生都要佔一個付費席位）。
    - **Public 代表全世界看得到整個 repo 和所有 commit 紀錄。** 不要放個資、研究資料、聯絡方式或不能公開的程式。專案不能公開時，先和老師討論，不要建 repo。
-2. **建 Supabase 資料庫**：到 https://supabase.com 建專案，Region 選 **Southeast Asia (Singapore)**。
-   - **請在 supabase.com 建立，不要從 Vercel 的 Marketplace 加。** 這是研究室的慣例：開發期間你是自己 Supabase 組織的 Owner，邀請老師、帳單、暫停都在 supabase.com 管理；交接時研究室另外建新的資料庫，學生的作法統一，交接步驟才固定。
-3. **建資料表**：在電腦上執行：
+   - commit 紀錄會顯示你的 Git Email。在 GitHub 的 **Settings → Emails** 開啟「Keep my email addresses private」，並把本機的 Git Email 設成 GitHub 給你的 noreply 信箱（`git config --global user.email 〈noreply 信箱〉`），之後檢查新的 commit 是否已改用它。
+2. **請老師開資料庫和網站**：把 repo 名稱告訴老師（或助理）。老師會在研究室的 Supabase 組織 **DITLDESIGN** 開專案（Region：Southeast Asia (Singapore)），在研究室的 Vercel 團隊 **DITLDESIGN** 匯入這個 repo（Framework Preset：**Other**，Build Command 留空），並設好 `.env.example` 列的三個環境變數。**不要用個人帳號建資料庫或部署。**
+   - **研究室的 Supabase 是共用空間**：組織裡的每位學生都看得到、也改得到所有專案的資料。只放公開或假資料；要用個資、研究資料或合作單位的資料時，開始前先和老師討論。不要動別人專案的資料。
+   - **登入帳號也算資料**：登入者的 Email 會存在 Supabase 的使用者表，同學都查得到。研究室 Supabase 只讓研究室成員用自己的學校 Email 登入測試；要讓校外的人登入，開始前先和老師討論。
+3. **建資料表**：在電腦上執行（學生權限能不能執行，研究室試點確認中；失敗時請老師或助理執行）：
    ```bash
    npx supabase login
    npx supabase link --project-ref 〈Supabase 專案代碼〉
    npx supabase db push
    ```
    這會照 `supabase/migrations` 建好資料表。
-4. **部署到 Vercel**：用你自己的 Vercel 帳號 **Add New → Project**，匯入這個 repo。Framework Preset 選 **Other**，Build Command 留空。
-5. **設環境變數**：在 Vercel 專案的 **Settings → Environment Variables** 填入 `.env.example` 列的三個變數。值在 Supabase 的 **Project Settings → API Keys**。設好後重新部署一次。
-6. **設定登入網址**：到 Supabase 的 **Authentication → URL Configuration**：
+4. **部署**：老師匯入之後，push 到 `main` 應該會自動部署；開 Pull Request 會產生預覽網址（研究室試點確認中）。push 之後沒有部署或部署失敗，請找老師或助理：學生的 Viewer 權限**看不到 log**，由老師或助理查原因。
+5. **新增環境變數時**：更新 `.env.example`，並請老師在 Vercel 專案的 **Settings → Environment Variables** 設定（Viewer 不能改環境變數）。
+6. **設定登入網址**（專案設定，學生的 Developer 權限不能改，由老師或助理設定）：到 Supabase 的 **Authentication → URL Configuration**：
    - **Site URL**：你的網站網址，例如 `https://2026-wang-gacha.vercel.app`。
    - **Redirect URLs**：加上 `https://〈你的網址〉/login`，本機開發再加 `http://localhost:3000/login`。
    - 沒設定的話，登入信的連結會跳回 localhost 或被拒絕。
 7. **確認**：
    - 首頁的「連線檢查」顯示 ✅。
-   - 到登入頁用你的 Email 登入，信裡的連結能回到網站，登入頁顯示「伺服器確認了你的登入身分」。
+   - 到登入頁用你的學校 Email 登入，信裡的連結能回到網站，登入頁顯示「伺服器確認了你的登入身分」。
    - 回首頁新增一筆資料，看得到它；登出後看不到。
    - Supabase 內建的寄信服務只寄給你的 Supabase 組織成員，而且每小時有數量限制，只適合開發測試。要讓其他人登入，請先和老師討論設定自訂 SMTP。
-8. **讓老師看得到**：
-   - Supabase：**Organization Settings → Team → Invite**，邀請老師，角色選 **Developer**。
-   - 在研究室的專案登記表新增一列。
+8. **登記**：把專案資料交給老師或助理，登記到研究室的專案登記表。網站和資料庫都在研究室帳號，老師隨時看得到，不需要另外邀請。
 
 ### 2. 本機開發
 
@@ -61,6 +61,11 @@ npx vercel link
 npx vercel env pull .env.local
 npx vercel dev
 ```
+
+`vercel link` 選研究室團隊 **DITLDESIGN** 裡的這個專案。學生的 Viewer 權限能不能執行這幾個指令，研究室試點確認中：
+- **`vercel link` 失敗**：就不能用 `vercel dev`。請找老師或助理，不要自己改用其他方法部署。
+- **`vercel env pull` 失敗**：請老師或助理用老師指定的加密管道給你開發用的值，自己建 `.env.local`，照 `.env.example` 填入。其中 `SUPABASE_SECRET_KEY` 可以讀寫整個資料庫，只能放在自己的電腦：不能傳給別人、不能貼到網頁、聊天或 AI 對話裡，也不能 commit；不要拿別的專案的值來用。懷疑外洩（例如不小心 commit 或貼出去），**馬上告訴老師**，老師會立刻換掉，不用等到專案結束。專案結束時老師也會換掉這把金鑰。
+- `.env.local` 已被 `.gitignore` 擋住，不會被 commit。
 
 ### 3. 開發規則（交接靠這些）
 
@@ -89,6 +94,6 @@ npx vercel dev
 
 ### 5. 交接
 
-畢業或計畫結束時，照研究室的交接清單做：先和老師約停寫時間，研究室建好新站後，舊站停止寫入，再匯出最後一份資料。**不要提早匯出**，匯出之後新增的資料會遺失。
-
-匯出的檔案（`data-export.sql`）已經被 `.gitignore` 擋住，**不要 commit**，裡面有個資，請透過老師指定的私下管道交給老師。
+網站和資料庫本來就在研究室，**不用搬資料**。畢業或專案結束時：
+- 確認 README（含在 Supabase 網頁上手動設定的東西）、`.env.example`、`supabase/migrations/` 都是最新的。
+- 通知老師。老師會收回你在 GitHub、Vercel、Supabase 的權限，並換掉你拿過的金鑰。
