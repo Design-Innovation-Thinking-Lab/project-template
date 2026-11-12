@@ -22,36 +22,38 @@
 
 這是 DITL 研究室的 Vercel + Supabase 專案範本：純 HTML／CSS／JavaScript 網頁，加上 Vercel 的 API 函式和 Supabase 資料庫。
 
-### 1. 建立專案（約 15 分鐘）
+### 1. 接手專案（老師建好 repo 之後）
 
-1. **建 repo**：在 GitHub 這個範本頁按 **Use this template → Create a new repository**。
-   - Owner 選 `Design-Innovation-Thinking-Lab`。
-   - 名稱用 `年份-你的名字-專案名`。
-   - 預設設成 **Public**（研究室的 Vercel 團隊裡，私人 repo 每位 push 的學生都要佔一個付費席位）。
-   - **Public 代表全世界看得到整個 repo 和所有 commit 紀錄。** 不要放個資、研究資料、聯絡方式或不能公開的程式。專案不能公開時，先和老師討論，不要建 repo。
-   - commit 紀錄會顯示你的 Git Email。在 GitHub 的 **Settings → Emails** 開啟「Keep my email addresses private」，並把本機的 Git Email 設成 GitHub 給你的 noreply 信箱（`git config --global user.email 〈noreply 信箱〉`），之後檢查新的 commit 是否已改用它。
-2. **請老師開資料庫和網站**：把 repo 名稱告訴老師（或助理）。老師會在研究室的 Supabase 組織 **DITLDESIGN** 開專案（Region：Southeast Asia (Singapore)），在研究室的 Vercel 團隊 **DITLDESIGN** 匯入這個 repo（Framework Preset：**Other**，Build Command 留空），並設好 `.env.example` 列的三個環境變數。**不要用個人帳號建資料庫或部署。**
-   - **研究室的 Supabase 是共用空間**：組織裡的每位學生都看得到、也改得到所有專案的資料。只放公開或假資料；要用個資、研究資料或合作單位的資料時，開始前先和老師討論。不要動別人專案的資料。
-   - **登入帳號也算資料**：登入者的 Email 會存在 Supabase 的使用者表，同學都查得到。研究室 Supabase 只讓研究室成員用自己的學校 Email 登入測試；要讓校外的人登入，開始前先和老師討論。
-3. **建資料表**：在電腦上執行（學生權限能不能執行，研究室試點確認中；失敗時請老師或助理執行）：
-   ```bash
-   npx supabase login
-   npx supabase link --project-ref 〈Supabase 專案代碼〉
-   npx supabase db push
-   ```
-   這會照 `supabase/migrations` 建好資料表。
-4. **部署**：老師匯入之後，push 到 `main` 應該會自動部署；開 Pull Request 會產生預覽網址（研究室試點確認中）。push 之後沒有部署或部署失敗，請找老師或助理：學生的 Viewer 權限**看不到 log**，由老師或助理查原因。
-5. **新增環境變數時**：更新 `.env.example`，並請老師在 Vercel 專案的 **Settings → Environment Variables** 設定（Viewer 不能改環境變數）。
-6. **設定登入網址**（專案設定，學生的 Developer 權限不能改，由老師或助理設定）：到 Supabase 的 **Authentication → URL Configuration**：
-   - **Site URL**：你的網站網址，例如 `https://2026-wang-gacha.vercel.app`。
-   - **Redirect URLs**：加上 `https://〈你的網址〉/login`，本機開發再加 `http://localhost:3000/login`。
-   - 沒設定的話，登入信的連結會跳回 localhost 或被拒絕。
-7. **確認**：
+研究室的專案 repo **一律由老師建立**：學生先把做好的東西壓成 zip、附上專案說明交給老師（做法見研究室的學生指南），老師把程式套進這個範本，在組織 `Design-Innovation-Thinking-Lab` 建好 **Public** repo，開好研究室的 Supabase 專案和 Vercel 專案，再給你這個 repo 的 **Write** 權限。**不要自己建 repo，也不要用個人帳號建資料庫或部署。**
+
+- **Public 代表全世界看得到整個 repo 和所有 commit 紀錄。** 不要放個資、研究資料、聯絡方式或不能公開的程式。
+- **研究室的 Supabase 是共用空間**：組織裡的每位學生都看得到、也改得到所有專案的資料。只放公開或假資料；要用個資、研究資料或合作單位的資料時，先和老師討論。不要動別人專案的資料。
+- **登入帳號也算資料**：登入者的 Email 會存在 Supabase 的使用者表，同學都查得到。研究室 Supabase 只讓研究室成員用自己的學校 Email 登入測試；要讓校外的人登入，先和老師討論。
+
+接手時：
+
+1. **設定 Git Email**：commit 紀錄會顯示你的 Git Email。在 GitHub 的 **Settings → Emails** 開啟「Keep my email addresses private」，並把本機的 Git Email 設成 GitHub 給你的 noreply 信箱（`git config --global user.email 〈noreply 信箱〉`），之後檢查新的 commit 是否已改用它。
+2. **下載 repo**：`git clone https://github.com/Design-Innovation-Thinking-Lab/〈repo 名稱〉.git`。之後都在這個資料夾開發，不要再改交 zip 之前的舊資料夾。
+3. **確認網站**：
    - 首頁的「連線檢查」顯示 ✅。
    - 到登入頁用你的學校 Email 登入，信裡的連結能回到網站，登入頁顯示「伺服器確認了你的登入身分」。
    - 回首頁新增一筆資料，看得到它；登出後看不到。
    - Supabase 內建的寄信服務只寄給你的 Supabase 組織成員，而且每小時有數量限制，只適合開發測試。要讓其他人登入，請先和老師討論設定自訂 SMTP。
-8. **登記**：把專案資料交給老師或助理，登記到研究室的專案登記表。網站和資料庫都在研究室帳號，老師隨時看得到，不需要另外邀請。
+4. **部署**：push 到 `main` 應該會自動部署；開 Pull Request 會產生預覽網址（研究室試點確認中）。push 之後沒有部署或部署失敗，請找老師或助理：學生的 Viewer 權限**看不到 log**，由老師或助理查原因。
+5. **改資料表**：新增 migration 之後，在電腦上執行（學生權限能不能執行，研究室試點確認中；失敗時請老師或助理執行）：
+   ```bash
+   npx supabase --version        # 要是 3 以上；舊版的指令不同，請先告訴老師
+   npx supabase login
+   npx supabase link --project-ref 〈Supabase 專案代碼〉
+   npx supabase db push --remote --dry-run   # 只列出會套用哪些 migration，不會改資料庫
+   npx supabase db push --remote             # 確認 Target 是這個專案、清單正確，再輸入 y 套用
+   ```
+   一定要加 `--remote`：不加的話，`db push` 只會推到電腦上的本機資料庫，雲端不會改。
+6. **新增環境變數時**：更新 `.env.example`，並請老師在 Vercel 專案的 **Settings → Environment Variables** 設定（Viewer 不能改環境變數）。
+7. **登入網址**是 Supabase 的專案設定（**Authentication → URL Configuration**），學生的 Developer 權限不能改，由老師或助理設定：Site URL 是網站網址，Redirect URLs 是 `https://〈你的網址〉/login` 和 `http://localhost:3000/login`。網址有變時請告訴老師。
+8. **登記**：網站和資料庫都在研究室帳號，老師隨時看得到，不需要另外邀請。登記資料由老師或助理維護。
+
+**老師或助理建 repo 時**：在這個範本頁按 **Use this template → Create a new repository**，Owner 選 `Design-Innovation-Thinking-Lab`，名稱用 `年份-學生名字-專案名`。一般設成 **Public**；專案有研究資料、個資或要保密時，先依研究室規則決定改用私人 repo 或另開資料庫，**決定之前不要建 repo**。Vercel 匯入時 Framework Preset 選 **Other**，Build Command 留空，並設好 `.env.example` 列的三個環境變數。
 
 ### 2. 本機開發
 
@@ -71,7 +73,7 @@ npx vercel dev
 
 - **密碼、金鑰一律放環境變數。** 不寫進程式，也不 commit。`.gitignore` 已經擋住 `.env*`。
 - **秘密金鑰只在 `api/` 裡用。** 網頁（`public/`）只能拿到公開金鑰。
-- **改資料庫一律新增 migration**：`npx supabase migration new 〈名稱〉`，寫好 SQL 後 `npx supabase db push`。不要只在 Supabase 網頁上手動改，否則交接時重建不出來。
+- **改資料庫一律新增 migration**：`npx supabase migration new 〈名稱〉`，寫好 SQL 後照上面第 5 點用 `npx supabase db push --remote` 套用（先加 `--dry-run` 看一次）。不要只在 Supabase 網頁上手動改，否則交接時重建不出來。
 - **每張新資料表都要開 RLS**（`alter table … enable row level security;`）。
 - **RLS 只擋瀏覽器直接讀資料表，擋不住你自己寫的 API。** `api/` 用秘密金鑰，會略過 RLS，所以每支 API 都要自己檢查「是誰」以及「可以讀寫哪些資料」。範本的 `api/items.mjs` 要求登入，而且每個人只讀寫自己的資料；登入只代表知道是誰，不代表什麼都能做。
 - **開放不登入就能寫入的 API 之前先和老師討論**：任何人都能灌資料。真的需要時，只放假資料，並在 Vercel Firewall 加上頻率限制。
